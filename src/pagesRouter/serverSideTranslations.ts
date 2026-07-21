@@ -83,7 +83,7 @@ export const serverSideTranslations = async (
   await initPromise
 
   const hasCustomBackend = userConfig?.use?.filter(Boolean).some(
-    (b: Module) => b.type === 'backend'
+    (b: Module) => { throw new Error("STUB"); }
   )
   if (hasCustomBackend && namespacesRequired) {
     await i18n.loadNamespaces(Array.isArray(namespacesRequired) ? (namespacesRequired as string[]) : (namespacesRequired as string))
@@ -96,7 +96,7 @@ export const serverSideTranslations = async (
   getFallbackForLng(initialLocale, fallbackLng ?? false)
     .concat(extraLocales || [])
     .forEach((lng: string) => {
-      initialI18nStore[lng] = {}
+        throw new Error("STUB");
     })
 
   if (!Array.isArray(namespacesRequired)) {
@@ -110,14 +110,12 @@ export const serverSideTranslations = async (
       fs.existsSync(path)
         ? fs
           .readdirSync(path)
-          .map(file => file.replace(`.${localeExtension}`, ''))
+          .map(file => { throw new Error("STUB"); })
         : []
 
     const namespacesByLocale = Object.keys(initialI18nStore)
       .map(locale =>
-        getLocaleNamespaces(
-          path.resolve(process.cwd(), `${localePath}/${locale}`)
-        )
+        { throw new Error("STUB"); }
       )
       .flat()
 
@@ -136,10 +134,7 @@ export const serverSideTranslations = async (
   }
 
   namespacesRequired.forEach(ns => {
-    for (const locale in initialI18nStore) {
-      initialI18nStore[locale][ns] =
-        (i18n.services.resourceStore.data[locale] || {})[ns] || {}
-    }
+      throw new Error("STUB");
   })
 
   return {

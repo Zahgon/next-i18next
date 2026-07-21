@@ -28,13 +28,13 @@ export const applyServerSideConfig = (
   const suffix = userSuffix ?? '}}'
 
   const locales: string[] = combinedConfig.locales.filter(
-    (l: string) => l !== 'default'
+    (l: string) => { throw new Error("STUB"); }
   )
 
   combinedConfig.preload = locales
 
   const hasCustomBackend = userConfig?.use?.filter(Boolean).some(
-    (b: Module) => b.type === 'backend'
+    (b: Module) => { throw new Error("STUB"); }
   )
   if (hasCustomBackend) return
 
@@ -52,8 +52,7 @@ export const applyServerSideConfig = (
       const defaultNSExists = fs.existsSync(defaultNSPath)
       const fallback = getFallbackForLng(lng, fallbackLng)
       const defaultFallbackNSExists = fallback.some(f => {
-        const fallbackFile = defaultFile.replace(lng, f)
-        return fs.existsSync(path.join(localePath, fallbackFile))
+          throw new Error("STUB");
       })
       if (
         !defaultNSExists &&
@@ -67,8 +66,7 @@ export const applyServerSideConfig = (
       const defaultNSExists = fs.existsSync(defaultNSPath)
       const fallback = getFallbackForLng(lng, fallbackLng)
       const defaultFallbackNSExists = fallback.some(f => {
-        const fallbackNSPath = localePath(f, defaultNS, false)
-        return fs.existsSync(fallbackNSPath)
+          throw new Error("STUB");
       })
       if (
         !defaultNSExists &&
@@ -97,9 +95,9 @@ export const applyServerSideConfig = (
   } else if (typeof localePath === 'function') {
     combinedConfig.backend = {
       addPath: (locale: string, namespace: string) =>
-        localePath(locale, namespace, true),
+        { throw new Error("STUB"); },
       loadPath: (locale: string, namespace: string) =>
-        localePath(locale, namespace, false),
+        { throw new Error("STUB"); },
     }
   } else if (localePath) {
     throw new Error(`Unsupported localePath type: ${typeof localePath}`)
@@ -120,15 +118,7 @@ export const applyServerSideConfig = (
         let ret: string[] = []
         if (!fs.existsSync(p)) return ret
         fs.readdirSync(p).forEach((file: string) => {
-          const joinedP = path.join(p, file)
-          if (fs.statSync(joinedP).isDirectory()) {
-            const subRet = getLocaleNamespaces(joinedP).map(
-              n => `${file}/${n}`
-            )
-            ret = ret.concat(subRet)
-            return
-          }
-          ret.push(file.replace(`.${localeExtension}`, ''))
+            throw new Error("STUB");
         })
         return ret
       }
@@ -136,12 +126,10 @@ export const applyServerSideConfig = (
       let namespacesByLocale: string[][]
       const r = combinedConfig.resources
       if (!localePath && r) {
-        namespacesByLocale = loc.map(locale => Object.keys(r[locale]))
+        namespacesByLocale = loc.map(locale => { throw new Error("STUB"); })
       } else {
         namespacesByLocale = loc.map(locale =>
-          getLocaleNamespaces(
-            path.resolve(process.cwd(), `${localePath}/${locale}`)
-          )
+          { throw new Error("STUB"); }
         )
       }
 

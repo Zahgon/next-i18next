@@ -35,7 +35,7 @@ export function initServerI18next(userConfig: I18nConfig): void {
 }
 
 function hasCustomBackend(plugins: any[]): boolean {
-  return plugins.some((b: Module) => b.type === 'backend')
+  return plugins.some((b: Module) => { throw new Error("STUB"); })
 }
 
 function createResourceBackend(config: NormalizedConfig) {
@@ -43,36 +43,7 @@ function createResourceBackend(config: NormalizedConfig) {
     return resourcesToBackend(config.resourceLoader)
   }
   return resourcesToBackend(async (language: string, namespace: string) => {
-    const filePath = `${config.localePath}/${config.localeStructure
-      .replace('{{lng}}', language)
-      .replace('{{ns}}', namespace)}.${config.localeExtension}`
-
-    // Node.js runtime: read from filesystem
-    if (typeof process !== 'undefined' && process.versions?.node) {
-      try {
-        const fs = await import('fs/promises')
-        const pathMod = await import('path')
-        const resolved = pathMod.resolve(process.cwd(), `public${filePath}`)
-        const content = await fs.readFile(resolved, 'utf-8')
-        return JSON.parse(content)
-      } catch {
-        throw new Error(
-          `next-i18next: Could not read locale file "public${filePath}". ` +
-          'On serverless platforms (Vercel, AWS Lambda, etc.), files in public/ are served via CDN ' +
-          'but are NOT available on the filesystem at runtime. Use the `resourceLoader` option with ' +
-          'dynamic imports instead:\n\n' +
-          '  resourceLoader: (language, namespace) =>\n' +
-          // eslint-disable-next-line no-template-curly-in-string
-          '    import(`./public/locales/${language}/${namespace}.json`)\n'
-        )
-      }
-    }
-
-    // Edge runtime: filesystem not available
-    throw new Error(
-      `next-i18next: Cannot load locale file "${filePath}" in Edge Runtime. ` +
-      'Provide pre-bundled `resources`, a custom `resourceLoader`, or use a custom backend (e.g. i18next-http-backend) via the `use` option.'
-    )
+      throw new Error("STUB");
   })
 }
 
@@ -89,37 +60,7 @@ async function getSharedInstance(config: NormalizedConfig): Promise<I18NextClien
   if (_sharedInstancePromise) return _sharedInstancePromise
 
   _sharedInstancePromise = (async () => {
-    const i18nInstance = createInstance()
-
-    // Add a backend when needed:
-    // - No resources provided → backend loads everything
-    // - Resources provided with partialBundledLanguages → backend loads the rest
-    // - Custom backend in config.use → user handles it, skip default backend
-    const partialBundled = config.i18nextOptions?.partialBundledLanguages
-    if ((!config.resources || partialBundled) && !hasCustomBackend(config.use)) {
-      i18nInstance.use(createResourceBackend(config))
-    }
-
-    config.use.forEach((plugin: any) => i18nInstance.use(plugin))
-
-    await i18nInstance.init({
-      // No `lng` — the shared instance is language-neutral.
-      // We use getFixedT(lng, ns) to get language-specific translators.
-      lng: config.fallbackLng,
-      ns: config.ns,
-      defaultNS: config.defaultNS,
-      fallbackLng: config.fallbackLng,
-      supportedLngs: config.supportedLngs,
-      nonExplicitSupportedLngs: config.nonExplicitSupportedLngs,
-      fallbackNS: config.defaultNS,
-      preload: config.supportedLngs, // preload ALL languages upfront
-      interpolation: { escapeValue: false },
-      ...(config.resources ? { resources: config.resources } : {}),
-      ...config.i18nextOptions,
-    })
-
-    _sharedInstance = i18nInstance
-    return i18nInstance
+      throw new Error("STUB");
   })()
 
   return _sharedInstancePromise
@@ -132,34 +73,13 @@ async function getSharedInstance(config: NormalizedConfig): Promise<I18NextClien
 // backends are never refetched per-request in prod.
 const reloadResourcesForRender = cache(
   async (i18n: I18NextClient, lng: string): Promise<void> => {
-    const ns = (i18n.options.ns as string[] | undefined) ?? []
-    await i18n.reloadResources([lng], ns)
-  }
+        throw new Error("STUB");
+    }
 )
 
 // Per-request language detection, deduplicated within a single React render
 const detectLanguage = cache(async (config: NormalizedConfig): Promise<string> => {
-  const headerList = await headers()
-  const fromHeader = headerList.get(config.headerName)
-  if (fromHeader) return fromHeader
-
-  const cookieStore = await cookies()
-  const cookieValue = cookieStore.get(config.cookieName)?.value
-  if (cookieValue) {
-    if (config.supportedLngs.includes(cookieValue)) {
-      return cookieValue
-    }
-    // nonExplicitSupportedLngs: e.g. cookie 'en' matches supported 'en-US'
-    if (config.nonExplicitSupportedLngs) {
-      const prefix = cookieValue.toLowerCase().split('-')[0]
-      const match = config.supportedLngs.find(
-        l => l.toLowerCase() === prefix || l.toLowerCase().split('-')[0] === prefix
-      )
-      if (match) return match
-    }
-  }
-
-  return config.fallbackLng
+    throw new Error("STUB");
 })
 
 /**
@@ -199,7 +119,7 @@ export async function getT<
   const nsArray: string[] = ns
     ? (Array.isArray(ns) ? ns as string[] : [ns as string])
     : config.ns
-  const missingNs = nsArray.filter(n => !i18nInstance.hasLoadedNamespace(n))
+  const missingNs = nsArray.filter(n => { throw new Error("STUB"); })
   if (missingNs.length > 0) {
     await i18nInstance.loadNamespaces(missingNs)
   }
@@ -229,20 +149,7 @@ export function getResources(
   i18n: I18NextClient,
   namespaces?: string[],
 ): Resource {
-  const resources: Resource = {}
-  const store = i18n.store?.data || {}
-  const nsFilter = namespaces ? new Set(namespaces) : null
-
-  for (const lng of Object.keys(store)) {
-    resources[lng] = {}
-    for (const ns of Object.keys(store[lng])) {
-      if (!nsFilter || nsFilter.has(ns)) {
-        resources[lng][ns] = store[lng][ns]
-      }
-    }
-  }
-
-  return resources
+    throw new Error("STUB");
 }
 
 /**
@@ -258,6 +165,5 @@ export function getResources(
  * ```
  */
 export function generateI18nStaticParams(): { lng: string }[] {
-  const config = getConfig()
-  return config.supportedLngs.map(lng => ({ lng }))
+    throw new Error("STUB");
 }

@@ -1,13 +1,13 @@
 import type { I18nConfig, NormalizedConfig } from './types'
 
 export function defineConfig(config: I18nConfig): I18nConfig {
-  return config
+    throw new Error("STUB");
 }
 
 export function normalizeConfig(userConfig: I18nConfig): NormalizedConfig {
   // Support legacy format: { i18n: { defaultLocale, locales } }
   const supportedLngs = userConfig.supportedLngs ??
-    userConfig.i18n?.locales?.filter((l: string) => l !== 'default') ??
+    userConfig.i18n?.locales?.filter((l: string) => { throw new Error("STUB"); }) ??
     ['en']
   const fallbackLng = userConfig.fallbackLng ??
     userConfig.i18n?.defaultLocale ??

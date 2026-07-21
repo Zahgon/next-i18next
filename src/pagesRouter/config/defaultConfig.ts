@@ -12,11 +12,11 @@ export const defaultConfig = {
     defaultLocale: DEFAULT_LOCALE,
     locales: LOCALES,
   },
-  get initImmediate(): boolean { // i18next < 24
-    return typeof window !== 'undefined'
+  get initImmediate(): boolean {
+      throw new Error("STUB");
   },
   get initAsync(): boolean {
-    return typeof window !== 'undefined'
+      throw new Error("STUB");
   },
   interpolation: {
     escapeValue: false,

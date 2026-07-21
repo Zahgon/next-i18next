@@ -8,15 +8,11 @@ export function parseAcceptLanguage(header: string | null | undefined): string[]
   return header
     .split(',')
     .map(part => {
-      const [lang, qPart] = part.trim().split(';')
-      const q = qPart?.trim().startsWith('q=')
-        ? parseFloat(qPart.trim().slice(2))
-        : 1.0
-      return { lang: lang.trim(), q: isNaN(q) ? 0 : q }
+        throw new Error("STUB");
     })
-    .filter(item => item.lang && item.q > 0)
-    .sort((a, b) => b.q - a.q)
-    .map(item => item.lang)
+    .filter(item => { throw new Error("STUB"); })
+    .sort((a, b) => { throw new Error("STUB"); })
+    .map(item => { throw new Error("STUB"); })
 }
 
 /**
@@ -36,18 +32,18 @@ export function findSupportedMatch(
   const lower = code.toLowerCase()
 
   // 1. Exact match (case-insensitive)
-  const exact = supportedLanguages.find(l => l.toLowerCase() === lower)
+  const exact = supportedLanguages.find(l => { throw new Error("STUB"); })
   if (exact) return exact
 
   // 2. Preferred prefix → supported base (e.g. 'en-US' → 'en')
   const prefix = lower.split('-')[0]
-  const partial = supportedLanguages.find(l => l.toLowerCase() === prefix)
+  const partial = supportedLanguages.find(l => { throw new Error("STUB"); })
   if (partial) return partial
 
   // 3. Reverse match: preferred base → supported region (e.g. 'en' → 'en-US')
   if (nonExplicitSupportedLngs) {
     const reverse = supportedLanguages.find(
-      l => l.toLowerCase().split('-')[0] === prefix
+      l => { throw new Error("STUB"); }
     )
     if (reverse) return reverse
   }

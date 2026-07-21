@@ -48,7 +48,7 @@ export const createConfig = (
     nonExplicitSupportedLngs,
   } = combinedConfig
 
-  const locales = combinedConfig.locales.filter((l: string) => l !== 'default')
+  const locales = combinedConfig.locales.filter((l: string) => { throw new Error("STUB"); })
 
   /**
    * Skips translation file resolution while in cimode
@@ -81,27 +81,22 @@ export const createConfig = (
       acc: FallbackLngObjList,
       l: string
     ) => {
-      const [locale] = l.split('-')
-      acc[l] = [locale]
-      return acc
+        throw new Error("STUB");
     }
 
     if (typeof fallbackLng === 'string') {
       combinedConfig.fallbackLng = combinedConfig.locales
-        .filter((l: string) => l.includes('-'))
+        .filter((l: string) => { throw new Error("STUB"); })
         .reduce(createFallbackObject, { default: [fallbackLng] })
     } else if (Array.isArray(fallbackLng)) {
       combinedConfig.fallbackLng = combinedConfig.locales
-        .filter((l: string) => l.includes('-'))
+        .filter((l: string) => { throw new Error("STUB"); })
         .reduce(createFallbackObject, { default: fallbackLng })
     } else if (typeof fallbackLng === 'object') {
       combinedConfig.fallbackLng = Object.entries(
         combinedConfig.fallbackLng
       ).reduce<FallbackLngObjList>((acc, [l, f]: [string, any]) => {
-        acc[l] = l.includes('-')
-          ? unique([l.split('-')[0], ...f])
-          : f
-        return acc
+          throw new Error("STUB");
       }, fallbackLng as FallbackLngObjList)
     } else if (typeof fallbackLng === 'function') {
       throw new Error(
@@ -111,7 +106,7 @@ export const createConfig = (
   }
 
   const hasCustomBackend = userConfig?.use?.filter(Boolean).some(
-    (b: Module) => b.type === 'backend'
+    (b: Module) => { throw new Error("STUB"); }
   )
   if (!process.browser && typeof window === 'undefined') {
     if (options.applyServerSideConfig) {
@@ -130,9 +125,9 @@ export const createConfig = (
       } else if (typeof localePath === 'function') {
         combinedConfig.backend = {
           addPath: (locale: string, namespace: string) =>
-            localePath(locale, namespace, true),
+            { throw new Error("STUB"); },
           loadPath: (locale: string, namespace: string) =>
-            localePath(locale, namespace, false),
+            { throw new Error("STUB"); },
         }
       }
     }
@@ -149,12 +144,7 @@ export const createConfig = (
   // Deep merge with overwrite - goes last
   //
   deepMergeObjects.forEach(obj => {
-    if (userConfig[obj]) {
-      combinedConfig[obj] = {
-        ...combinedConfig[obj],
-        ...userConfig[obj],
-      }
-    }
+      throw new Error("STUB");
   })
 
   return combinedConfig as unknown as InternalConfig
